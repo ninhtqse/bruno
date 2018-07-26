@@ -2,7 +2,7 @@
     "name": "phuongtt/bruno",
     "autoload": {
         "psr-4": {
-            "Optimus\\Bruno\\": "src/"
+            "Phuongtt\\Bruno\\": "src/"
         }
     },
     "require": {
