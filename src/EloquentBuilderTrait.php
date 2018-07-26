@@ -141,6 +141,9 @@ trait EloquentBuilderTrait
 
                     $castToText = (($dbType === 'postgres') ? 'TEXT' : 'CHAR');
                     $databaseField = DB::raw(sprintf('CAST(%s.%s AS ' . $castToText . ')', $table, $key));
+                    if($dbType === 'sqlsrv') {
+                        $databaseField = $key;
+                    }
                     $clauseOperator = ($not ? 'NOT':'') . (($dbType === 'postgres') ? 'ILIKE' : 'LIKE');
                     $value = $valueString[$operator];
                     break;
