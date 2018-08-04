@@ -136,6 +136,7 @@ abstract class LaravelController extends Controller
         $this->defaults = array_merge([
             'includes' => [],
             'sort' => [],
+            'fields' => '',
             'limit' => null,
             'page' => null,
             'mode' => 'embed',
@@ -144,6 +145,7 @@ abstract class LaravelController extends Controller
 
         $includes = $this->parseIncludes($request->get('includes', $this->defaults['includes']));
         $sort = $this->parseSort($request->get('sort', $this->defaults['sort']));
+        $fields = $request->get('fields', '');
         $limit = $request->get('limit', $this->defaults['limit']);
         $page = $request->get('page', $this->defaults['page']);
         $filter_groups = $this->parseFilterGroups($request->get('filter_groups', $this->defaults['filter_groups']));
@@ -156,6 +158,7 @@ abstract class LaravelController extends Controller
             'includes' => $includes['includes'],
             'modes' => $includes['modes'],
             'sort' => $sort,
+            'fields' => $fields,
             'limit' => $limit,
             'page' => $page,
             'filter_groups' => $filter_groups

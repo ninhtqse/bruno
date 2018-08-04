@@ -36,6 +36,10 @@ trait EloquentBuilderTrait
         if (isset($filter_groups)) {
             $filterJoins = $this->applyFilterGroups($queryBuilder, $filter_groups);
         }
+        
+        if ($fields) {
+            $queryBuilder->select($fields);
+        }
 
         if (isset($sort)) {
             if (!is_array($sort)) {
