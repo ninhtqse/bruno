@@ -36,7 +36,7 @@ trait EloquentBuilderTrait
         if (isset($filter_groups)) {
             $filterJoins = $this->applyFilterGroups($queryBuilder, $filter_groups);
         }
-        
+
         if ($fields) {
             $queryBuilder->select($fields);
         }
@@ -277,18 +277,16 @@ trait EloquentBuilderTrait
     private function joinRelatedModelIfExists(Builder $queryBuilder, $key)
     {
         $model = $queryBuilder->getModel();
-
         // relationship exists, join to make special sort
         if (method_exists($model, $key)) {
             $relation = $model->$key();
             $type = 'inner';
-
             if ($relation instanceof BelongsTo) {
                 $queryBuilder->join(
                     $relation->getRelated()->getTable(),
-                    $model->getTable().'.'.$relation->getQualifiedForeignKeyName(),
+                    $relation->getQualifiedForeignKey(),
                     '=',
-                    $relation->getRelated()->getTable().'.'.$relation->getOwnerKey(),
+                    $relation->getQualifiedOwnerKeyName(),
                     $type
                 );
             } elseif ($relation instanceof BelongsToMany) {
@@ -296,14 +294,14 @@ trait EloquentBuilderTrait
                     $relation->getTable(),
                     $relation->getQualifiedParentKeyName(),
                     '=',
-                    $relation->getQualifiedForeignKeyName(),
+                    $relation->getQualifiedForeignPivotKeyName(),
                     $type
                 );
                 $queryBuilder->join(
                     $relation->getRelated()->getTable(),
                     $relation->getRelated()->getTable().'.'.$relation->getRelated()->getKeyName(),
                     '=',
-                    $relation->getQualifiedRelatedKeyName(),
+                    $relation->getQualifiedRelatedPivotKeyName(),
                     $type
                 );
             } else {
@@ -311,11 +309,10 @@ trait EloquentBuilderTrait
                     $relation->getRelated()->getTable(),
                     $relation->getQualifiedParentKeyName(),
                     '=',
-                    $relation->getQualifiedForeignKeyName(),
+                    $relation->getQualifiedForeignPivotKeyName(),
                     $type
                 );
             }
-
             $table = $model->getTable();
             $queryBuilder->select(sprintf('%s.*', $table));
         }
