@@ -80,16 +80,25 @@ trait EloquentBuilderTrait
      */
     protected function applyFilterGroups(Builder $queryBuilder, array $filterGroups = [], array $previouslyJoined = [])
     {
+        // filter các quan hệ (sửa tạm)
         $joins = [];
         foreach ($filterGroups as $group) {
+            
             $or = $group['or'];
             $filters = $group['filters'];
-
-            $queryBuilder->where(function (Builder $query) use ($filters, $or, &$joins) {
-                foreach ($filters as $filter) {
-                    $this->applyFilter($query, $filter, $or, $joins);
-                }
-            });
+            $first = current($filters);
+            if(strrpos(@$first['key'], '.') !== false) {
+                $tmp = explode('.', $first['key']);
+                $queryBuilder->whereHas($tmp[0], function ($query) use ($first, $tmp) {
+                    $query->where($tmp[1], '=', $first['value']);
+                });
+            } else {
+                $queryBuilder->where(function (Builder $query) use ($filters, $or, &$joins) {
+                    foreach ($filters as $filter) {
+                        $this->applyFilter($query, $filter, $or, $joins);
+                    }
+                });
+            }
         }
 
         foreach(array_diff($joins, $previouslyJoined) as $join) {
@@ -97,6 +106,25 @@ trait EloquentBuilderTrait
         }
 
         return $joins;
+
+
+        // $joins = [];
+        // foreach ($filterGroups as $group) {
+        //     $or = $group['or'];
+        //     $filters = $group['filters'];
+
+        //     $queryBuilder->where(function (Builder $query) use ($filters, $or, &$joins) {
+        //         foreach ($filters as $filter) {
+        //             $this->applyFilter($query, $filter, $or, $joins);
+        //         }
+        //     });
+        // }
+
+        // foreach(array_diff($joins, $previouslyJoined) as $join) {
+        //     $this->joinRelatedModelIfExists($queryBuilder, $join);
+        // }
+
+        // return $joins;
     }
 
     /**
