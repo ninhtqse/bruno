@@ -83,8 +83,10 @@ abstract class LaravelController extends Controller
                 $explode[1] = $this->defaults['mode'];
             }
 
-            $return['includes'][] = $explode[0];
-            $return['modes'][$explode[0]] = $explode[1];
+            // $return['includes'][] = $explode[0];
+            // $return['modes'][$explode[0]] = $explode[1];
+            $return['includes'][] = $include;
+            $return['modes'][0] = "";
         }
 
         return $return;
