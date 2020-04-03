@@ -42,12 +42,12 @@ abstract class LaravelController extends Controller
      * @param  string $key
      * @return mixed
      */
-    protected function parseData($data, array $options, $key = null)
-    {
-        $architect = new Architect();
+    // protected function parseData($data, array $options, $key = null)
+    // {
+    //     $architect = new Architect();
 
-        return $architect->parseData($data, $options['modes'], $key);
-    }
+    //     return $architect->parseData($data, $options['modes'], $key);
+    // }
 
     /**
      * Page sort
