@@ -1,8 +1,8 @@
 {
-    "name": "ninhtq/bruno",
+    "name": "ninhtqse/bruno",
     "autoload": {
         "psr-4": {
-            "Ninhtq\\Bruno\\": "src/"
+            "Ninhtqse\\Bruno\\": "src/"
         }
     },
     "require": {
