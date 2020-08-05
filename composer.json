@@ -1,18 +1,14 @@
 {
-    "name": "phuongtt/bruno",
+    "name": "ninhtq/bruno",
     "autoload": {
         "psr-4": {
-            "Phuongtt\\Bruno\\": "src/"
+            "Ninhtq\\Bruno\\": "src/"
         }
     },
     "require": {
-        "laravel/framework": ">=5.4",
-        "phuongtt/architect": ">=1.0"
+        "laravel/framework": ">=5.4"
     },
     "require-dev": {
-        "mockery/mockery": "0.9.*",
-        "orchestra/testbench": "~3.1",
-        "phpunit/phpunit": "~4.7",
         "satooshi/php-coveralls": "dev-master@dev"
     },
     "minimum-stability": "stable",
