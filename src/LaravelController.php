@@ -83,11 +83,10 @@ abstract class LaravelController extends Controller
                 $explode[1] = $this->defaults['mode'];
             }
 
-            // $return['includes'][] = $explode[0];
-            // $return['modes'][$explode[0]] = $explode[1];
-            $return['includes'][] = $include;
-            $return['modes'][$explode[0]] = $this->defaults['mode'];
+            $return['includes'][] = $explode[0];
+            $return['modes'][$explode[0]] = $explode[1];
         }
+
         return $return;
     }
 
@@ -137,21 +136,19 @@ abstract class LaravelController extends Controller
         $this->defaults = array_merge([
             'includes' => [],
             'sort' => [],
-            'fields' => '',
             'limit' => null,
             'page' => null,
             'mode' => 'embed',
             'filter_groups' => [],
-            'options' => []
+            'start' => null
         ], $this->defaults);
 
         $includes = $this->parseIncludes($request->get('includes', $this->defaults['includes']));
         $sort = $this->parseSort($request->get('sort', $this->defaults['sort']));
-        $fields = $request->get('fields', '');
         $limit = $request->get('limit', $this->defaults['limit']);
         $page = $request->get('page', $this->defaults['page']);
         $filter_groups = $this->parseFilterGroups($request->get('filter_groups', $this->defaults['filter_groups']));
-        $options = $request->get('options', $this->defaults['options']);
+        $start = $request->get('start', $this->defaults['start']);
 
         if ($page !== null && $limit === null) {
             throw new InvalidArgumentException('Cannot use page option without limit option');
@@ -161,11 +158,10 @@ abstract class LaravelController extends Controller
             'includes' => $includes['includes'],
             'modes' => $includes['modes'],
             'sort' => $sort,
-            'fields' => $fields,
             'limit' => $limit,
             'page' => $page,
             'filter_groups' => $filter_groups,
-            'options' => $options
+            'start' => $start,
         ];
     }
 }

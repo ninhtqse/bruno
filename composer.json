@@ -9,6 +9,7 @@
         "laravel/framework": ">=5.4"
     },
     "require-dev": {
+        "ninhtqse/architect": "dev-master",
         "satooshi/php-coveralls": "dev-master@dev"
     },
     "minimum-stability": "stable",
