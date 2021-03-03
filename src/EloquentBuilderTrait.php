@@ -69,6 +69,13 @@ trait EloquentBuilderTrait
             $queryBuilder->distinct();
         }
 
+        if (isset($skip)) {
+            $queryBuilder->skip($skip);
+        }
+
+        if (isset($take)) {
+            $queryBuilder->take($take);
+        }
         return $queryBuilder;
     }
 
