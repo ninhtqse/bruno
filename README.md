@@ -32,7 +32,7 @@ To get started with Bruno I highly recommend my article on
 ## Installation
 
 ```bash
-composer require "ninhtqse/bruno @dev"
+composer require ninhtqse/bruno
 ```
 
 ## Usage
@@ -53,6 +53,9 @@ Sort | array | Property to sort by, e.g. 'title'
 Limit | integer | Limit of resources to return
 Page | integer | For use with limit
 Filter_groups | array | Array of filter groups. See below for syntax.
+Fields | array | Get the fields according to the parameters passed.
+Skip | integer | The starting position is in the database
+Take | integer | Number of records taken
 
 ### Implementation
 
@@ -61,8 +64,8 @@ Filter_groups | array | Array of filter groups. See below for syntax.
 
 namespace App\Http\Controllers;
 
-use Phuongtt\Api\Controller\EloquentBuilderTrait;
-use Phuongtt\Api\Controller\LaravelController;
+use Ninhtqse\Api\Controller\EloquentBuilderTrait;
+use Ninhtqse\Api\Controller\LaravelController;
 use App\Models\Book;
 
 class BookController extends LaravelController
