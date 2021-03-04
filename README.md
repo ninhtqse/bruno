@@ -1,4 +1,204 @@
-# Bruno
+# Bruno VIETNAM
+
+[![Latest Version](https://img.shields.io/github/release/esbenp/bruno.svg?style=flat-square)](https://github.com/esbenp/bruno/releases)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Build Status](https://img.shields.io/travis/esbenp/bruno/master.svg?style=flat-square)](https://travis-ci.org/esbenp/bruno)
+[![Coverage Status](https://img.shields.io/coveralls/esbenp/bruno.svg?style=flat-square)](https://coveralls.io/github/esbenp/bruno)
+[![Total Downloads](https://img.shields.io/packagist/dt/optimus/bruno.svg?style=flat-square)](https://packagist.org/packages/optimus/bruno)
+
+## Giới thiệu
+
+Một lớp bộ điều khiển cơ sở Laravel và một đặc điểm sẽ cho phép thêm tính năng lọc, sắp xếp, tải nhanh và phân trang cho
+URL tài nguyên.
+
+**Dành riêng cho Bruno**
+
+Gói này được đặt theo tên anh hùng Giordano Bruno. Một người nhìn xa trông rộng thực sự, người dám ước mơ xa hơn những gì người ta nghĩ có thể.
+Vì những ý tưởng của mình và việc từ chối từ bỏ chúng, ông đã bị thiêu sống vào năm 1600.
+[Tôi thực sự giới thiệu phim hoạt hình ngắn này về cuộc đời của anh ấy do Neil deGrasse Tyson thuật lại](https://vimeo.com/89241669).
+
+## Chức năng
+
+* Phân tích cú pháp các thông số GET để tải động các tài nguyên liên quan, sắp xếp và phân trang
+* Lọc tài nguyên nâng cao bằng cách sử dụng nhóm bộ lọc
+* Sử dụng [Ninhtqse\Architect](https://github.com/ninhtqse/architect) để tải bên ngoài, tải id hoặc tải nhúng các tài nguyên liên quan
+
+## Hướng dẫn
+
+Để bắt đầu với Bruno, tôi thực sự giới thiệu bài viết về
+[Kiểm soát tài nguyên trong API Laravel](http://esbenp.github.io/2016/04/15/modern-rest-api-laravel-part-2/)
+
+## Cài đặt
+
+```bash
+composer require ninhtqse/bruno
+```
+
+## Sử dụng
+
+Các ví dụ sẽ là một điểm cuối tài nguyên giả định `/books` sẽ trả về một collection `Book`,
+thuộc về mỗi `Author`.
+
+```
+Book n ----- 1 Author
+```
+
+### Các tham số truy vấn có sẵn
+
+Từ khóa | Kiểu | Mô tả
+--- | ---- | -----------
+Includes | array | Mảng tài nguyên liên kết để tải, e.g. ['author', 'publisher', 'publisher.books']
+Sort | array | Thuộc tính sắp xếp theo, e.g. 'title'
+Limit | integer | Giới hạn tài nguyên để trả lại
+Page | integer | Để sử dụng có giới hạn
+Filter_groups | array | Mảng các nhóm bộ lọc. Xem bên dưới để biết cú pháp.
+Fields | array | Nhận các trường theo các tham số được truyền vào.
+Skip | integer | Vị trí bắt đầu nằm trong cơ sở dữ liệu
+Take | integer | Số lượng bản ghi muốn lấy
+
+### Thực hiện
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Ninhtqse\Api\Controller\EloquentBuilderTrait;
+use Ninhtqse\Api\Controller\LaravelController;
+use App\Models\Book;
+
+class BookController extends LaravelController
+{
+    use EloquentBuilderTrait;
+
+    public function getBooks()
+    {
+        // Parse the resource options given by GET parameters
+        $resourceOptions = $this->parseResourceOptions();
+
+        // Start a new query for books using Eloquent query builder
+        // (This would normally live somewhere else, e.g. in a Repository)
+        $query = Book::query();
+        $this->applyResourceOptions($query, $resourceOptions);
+        $books = $query->get();
+
+        // Parse the data using Optimus\Architect
+        $parsedData = $this->parseData($books, $resourceOptions, 'books');
+
+        // Create JSON response of parsed data
+        return $this->response($parsedData);
+    }
+}
+```
+
+## Tài liệu cú pháp
+
+### Eager loading
+
+**Simple eager load**
+
+`/books?includes[]=author`
+
+Sử dụng function relationship author trong model `Book` để load ra thêm mảng `Author`.
+
+**IDs mode**
+
+`/books?includes[]=author:ids`
+
+Lấy ra tất cả id của `Author`.
+
+**Sideload mode**
+
+`/books?includes[]=author:sideload`
+
+Tách mảng `Author` ra thêm 1 mảng riêng nữa. trong `Book` vẫn sẽ có ids của `Author`
+
+[Xem về eager loading trong Ninhtqse\Architect's README](https://github.com/ninhtqse/architect)
+
+### Phân trang
+
+Hai tham số có sẵn: `limit` và `page`. `limit` sẽ xác định số lượng
+bản ghi trên mỗi trang và `page` sẽ xác định trang hiện tại.
+
+`/books?limit=10&page=3`
+
+Sẽ trả lại bản ghi của book từ 30-40.
+
+### Sắp xếp
+
+Nên được định nghĩa là một mảng các quy tắc sắp xếp. Chúng sẽ được áp dụng trong
+thứ tự mà chúng được xác định.
+
+**Quy tắc sắp xếp**
+
+Tính chất | Kiểu dữ liệu | Mô tả
+-------- | ---------- | -----------
+key | string | Thuộc tính của model sẽ sắp xếp theo
+thuộc tính | ASC hoặc DESC | Sắp xếp thuộc tính nào
+
+**Ví dụ**
+
+```json
+[
+    {
+        "key": "title",
+        "direction": "ASC"
+    }, {
+        "key": "year",
+        "direction": "DESC"
+    }
+]
+```
+
+Sẽ dẫn đến việc các sách được sắp xếp theo tên sách theo thứ tự tăng dần và sau đó là năm
+thứ tự giảm dần.
+
+### Lọc
+
+Nên được định nghĩa là một mảng các nhóm bộ lọc.
+
+**Filter groups**
+
+Thuộc tính | Kiểu dữ liệu | Mô tả
+-------- | ---------- | -----------
+or | boolean | truyền vào toán tử OR hoặc AND, or = true sẽ là OR, or = false sẽ là AND
+filters | array | Mảng bộ lọc (xem cú pháp bên dưới)
+
+**Filters**
+
+Thuộc tính | Kiểu dữ liệu | Mô tả
+-------- | ---------- | -----------
+key | string | Thuộc tính của model để lọc (cũng có thể là bộ lọc tùy chỉnh)
+value | mixed | Giá trị cần tìm kiếm
+operator | string | Toán tử bộ lọc để sử dụng (xem các loại khác nhau bên dưới)
+not | boolean | Phủ nhận bộ lọc
+
+**Operators**
+
+Kiểu | Mô tả | Ví dụ
+---- | ----------- | -------
+ct | Chuỗi chứa | `ior` matches `Giordano Bruno` and `Giovanni`
+sw | Bắt đầu với | `Gior` matches `Giordano Bruno` but not `Giovanni`
+ew | Kết thúc với | `uno` matches `Giordano Bruno` but not `Giovanni`
+eq | Bằng | `Giordano Bruno` matches `Giordano Bruno` but not `Bruno`
+gt | Lớn hơn | `1548` matches `1600` but not `1400`
+gte| Lớn hơn hoặc bằng | `1548` matches `1548` and above (ony for Laravel 5.4 and above)
+lte | Nhỏ hơn hoặc bằng | `1600` matches `1600` and below (ony for Laravel 5.4 and above)
+lt | Ít hơn | `1600` matches `1548` but not `1700`
+in | Có tồn tại trong mảng | `['Giordano', 'Bruno']` matches `Giordano` and `Bruno` but not `Giovanni`
+bt | Giữa | `[1, 10]` matches `5` and `7` but not `11`
+
+**Giá trị đặc biệt**
+
+Giá trị | Mô tả
+----- | -----------
+null (string) | Thuộc tính sẽ được kiểm tra giá trị NULL
+(empty string) | Thuộc tính sẽ được kiểm tra giá trị NULL
+
+#### Bộ lọc tùy chỉnh (Xem bên dưới tài liệu tiếng anh)
+### Optional Shorthand Filtering Syntax (Xem bên dưới tài liệu tiếng anh)
+-----------------------------------------------------------------------------------------------------------------------------------------
+# Bruno ENGLISH
 
 [![Latest Version](https://img.shields.io/github/release/esbenp/bruno.svg?style=flat-square)](https://github.com/esbenp/bruno/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
