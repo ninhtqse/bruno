@@ -97,9 +97,13 @@ trait EloquentBuilderTrait
             if(strrpos(@$first['key'], '.') !== false) {
                 $tmp = explode('.', $first['key']);
                 $first['key'] = $tmp[1];
-                $queryBuilder->whereHas($tmp[0], function ($query) use ($first, $or, &$joins) {
+                $queryBuilder->whereHas($tmp[0], function ($query) use ($first, $or, &$joins,$filters) {
+                    foreach($filters as $filter){
+                        $exp = \explode('.',$filter['key']);
+                        $filter['key'] = $exp[1];
+                        $this->applyFilter($query, $filter, $or, $joins);
+                    }
                     // $query->where($tmp[1], '=', $first['value']);
-                    $this->applyFilter($query, $first, $or, $joins);
                 });
             } else {
                 $queryBuilder->where(function (Builder $query) use ($filters, $or, &$joins) {
