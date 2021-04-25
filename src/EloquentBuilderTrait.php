@@ -101,14 +101,14 @@ trait EloquentBuilderTrait
                     foreach($filters as $filter){
                         $exp = \explode('.',$filter['key']);
                         $filter['key'] = $exp[1];
-                        // $this->applyFilter($query, $filter, $or, $joins);
+                        $this->applyFilter($query, $filter, $or, $joins);
                     }
                     // $query->where($tmp[1], '=', $first['value']);
                 });
             } else {
                 $queryBuilder->where(function (Builder $query) use ($filters, $or, &$joins) {
                     foreach ($filters as $filter) {
-                        // $this->applyFilter($query, $filter, $or, $joins);
+                        $this->applyFilter($query, $filter, $or, $joins);
                     }
                 });
             }
@@ -119,6 +119,7 @@ trait EloquentBuilderTrait
         }
 
         return $joins;
+
 
         // $joins = [];
         // foreach ($filterGroups as $group) {
@@ -145,120 +146,120 @@ trait EloquentBuilderTrait
      * @param bool|false $or
      * @param array $joins
      */
-    // protected function applyFilter(Builder $queryBuilder, array $filter, $or = false, array &$joins)
-    // {
-    //     // Destructure Shorthand Filtering Syntax if filter is Shorthand
-    //     if (! array_key_exists('key', $filter) && count($filter) >= 3) {
-    //         $filter = [
-    //             'key'      => ($filter[0] ?: null),
-    //             'operator' => ($filter[1] ?: null),
-    //             'value'    => ($filter[2] ?: null),
-    //             'not'      => (array_key_exists(3, $filter) ? $filter[3] : null),
-    //         ];
-    //     }
+    protected function applyFilter(Builder $queryBuilder, array $filter, $or = false, array &$joins)
+    {
+        // Destructure Shorthand Filtering Syntax if filter is Shorthand
+        if (! array_key_exists('key', $filter) && count($filter) >= 3) {
+            $filter = [
+                'key'      => ($filter[0] ?: null),
+                'operator' => ($filter[1] ?: null),
+                'value'    => ($filter[2] ?: null),
+                'not'      => (array_key_exists(3, $filter) ? $filter[3] : null),
+            ];
+        }
 
-    //     // $value, $not, $key, $operator
-    //     extract($filter);
+        // $value, $not, $key, $operator
+        extract($filter);
 
-    //     $dbType = $queryBuilder->getConnection()->getDriverName();
+        $dbType = $queryBuilder->getConnection()->getDriverName();
 
-    //     $table = $queryBuilder->getModel()->getTable();
+        $table = $queryBuilder->getModel()->getTable();
 
-    //     if ($value === 'null' || $value === '') {
-    //         $method = $not ? 'WhereNotNull' : 'WhereNull';
+        if ($value === 'null' || $value === '') {
+            $method = $not ? 'WhereNotNull' : 'WhereNull';
 
-    //         call_user_func([$queryBuilder, $method], sprintf('%s.%s', $table, $key));
-    //     } else {
-    //         $method = filter_var($or, FILTER_VALIDATE_BOOLEAN) ? 'orWhere' : 'where';
-    //         $clauseOperator = null;
-    //         $databaseField = null;
+            call_user_func([$queryBuilder, $method], sprintf('%s.%s', $table, $key));
+        } else {
+            $method = filter_var($or, FILTER_VALIDATE_BOOLEAN) ? 'orWhere' : 'where';
+            $clauseOperator = null;
+            $databaseField = null;
 
-    //         switch($operator) {
-    //             case 'ct':
-    //             case 'sw':
-    //             case 'ew':
-    //                 $valueString = [
-    //                     'ct' => '%'.$value.'%', // contains
-    //                     'ew' => '%'.$value, // ends with
-    //                     'sw' => $value.'%' // starts with
-    //                 ];
+            switch($operator) {
+                case 'ct':
+                case 'sw':
+                case 'ew':
+                    $valueString = [
+                        'ct' => '%'.$value.'%', // contains
+                        'ew' => '%'.$value, // ends with
+                        'sw' => $value.'%' // starts with
+                    ];
 
-    //                 $castToText = (($dbType === 'postgres') ? 'TEXT' : 'CHAR');
-    //                 $databaseField = DB::raw(sprintf('CAST(%s.%s AS ' . $castToText . ')', $table, $key));
-    //                 if($dbType === 'sqlsrv') {
-    //                     $databaseField = $key;
-    //                 }
-    //                 $clauseOperator = ($not ? 'NOT':'') . (($dbType === 'postgres') ? 'ILIKE' : 'LIKE');
-    //                 $value = $valueString[$operator];
-    //                 break;
-    //             case 'eq':
-    //             default:
-    //                 $clauseOperator = $not ? '!=' : '=';
-    //                 break;
-    //             case 'gt':
-    //                 $clauseOperator = $not ? '<' : '>';
-    //                 break;
-    //             case 'gte':
-    //                 $clauseOperator = $not ? '<' : '>=';
-    //                 break;
-    //             case 'lte':
-    //                 $clauseOperator = $not ? '>' : '<=';
-    //                 break;
-    //             case 'lt':
-    //                 $clauseOperator = $not ? '>' : '<';
-    //                 break;
-    //             case 'in':
-    //                 if ($or === true) {
-    //                     $method = $not === true ? 'orWhereNotIn' : 'orWhereIn';
-    //                 } else {
-    //                     $method = $not === true ? 'whereNotIn' : 'whereIn';
-    //                 }
-    //                 $clauseOperator = false;
-    //                 break;
-    //             case 'bt':
-    //                 if ($or === true) {
-    //                     $method = $not === true ? 'orWhereNotBetween' : 'orWhereBetween';
-    //                 } else {
-    //                     $method = $not === true ? 'whereNotBetween' : 'whereBetween';
-    //                 }
-    //                 $clauseOperator = false;
-    //                 break;
-    //         }
+                    $castToText = (($dbType === 'postgres') ? 'TEXT' : 'CHAR');
+                    $databaseField = DB::raw(sprintf('CAST(%s.%s AS ' . $castToText . ')', $table, $key));
+                    if($dbType === 'sqlsrv') {
+                        $databaseField = $key;
+                    }
+                    $clauseOperator = ($not ? 'NOT':'') . (($dbType === 'postgres') ? 'ILIKE' : 'LIKE');
+                    $value = $valueString[$operator];
+                    break;
+                case 'eq':
+                default:
+                    $clauseOperator = $not ? '!=' : '=';
+                    break;
+                case 'gt':
+                    $clauseOperator = $not ? '<' : '>';
+                    break;
+                case 'gte':
+                    $clauseOperator = $not ? '<' : '>=';
+                    break;
+                case 'lte':
+                    $clauseOperator = $not ? '>' : '<=';
+                    break;
+                case 'lt':
+                    $clauseOperator = $not ? '>' : '<';
+                    break;
+                case 'in':
+                    if ($or === true) {
+                        $method = $not === true ? 'orWhereNotIn' : 'orWhereIn';
+                    } else {
+                        $method = $not === true ? 'whereNotIn' : 'whereIn';
+                    }
+                    $clauseOperator = false;
+                    break;
+                case 'bt':
+                    if ($or === true) {
+                        $method = $not === true ? 'orWhereNotBetween' : 'orWhereBetween';
+                    } else {
+                        $method = $not === true ? 'whereNotBetween' : 'whereBetween';
+                    }
+                    $clauseOperator = false;
+                    break;
+            }
 
-    //         // If we do not assign database field, the customer filter method
-    //         // will fail when we execute it with parameters such as CAST(%s AS TEXT)
-    //         // key needs to be reserved
-    //         if (is_null($databaseField)) {
-    //             $databaseField = sprintf('%s.%s', $table, $key);
-    //         }
+            // If we do not assign database field, the customer filter method
+            // will fail when we execute it with parameters such as CAST(%s AS TEXT)
+            // key needs to be reserved
+            if (is_null($databaseField)) {
+                $databaseField = sprintf('%s.%s', $table, $key);
+            }
 
-    //         $customFilterMethod = $this->hasCustomMethod('filter', $key);
-    //         if ($customFilterMethod) {
-    //             call_user_func_array([$this, $customFilterMethod], [
-    //                 $queryBuilder,
-    //                 $method,
-    //                 $clauseOperator,
-    //                 $value,
-    //                 $clauseOperator // @deprecated. Here for backwards compatibility
-    //             ]);
+            $customFilterMethod = $this->hasCustomMethod('filter', $key);
+            if ($customFilterMethod) {
+                call_user_func_array([$this, $customFilterMethod], [
+                    $queryBuilder,
+                    $method,
+                    $clauseOperator,
+                    $value,
+                    $clauseOperator // @deprecated. Here for backwards compatibility
+                ]);
 
-    //             // column to join.
-    //             // trying to join within a nested where will get the join ignored.
-    //             $joins[] = $key;
-    //         } else {
-    //             // In operations do not have an operator
-    //             if (in_array($operator, ['in', 'bt'])) {
-    //                 call_user_func_array([$queryBuilder, $method], [
-    //                     $databaseField, \json_decode($value,true)
-    //                 ]);
-    //             } else {
-    //                 call_user_func_array([$queryBuilder, $method], [
-    //                     $databaseField, $clauseOperator, $value
-    //                 ]);
-    //             }
-    //         }
-    //     }
-    // }
+                // column to join.
+                // trying to join within a nested where will get the join ignored.
+                $joins[] = $key;
+            } else {
+                // In operations do not have an operator
+                if (in_array($operator, ['in', 'bt'])) {
+                    call_user_func_array([$queryBuilder, $method], [
+                        $databaseField, \json_decode($value,true)
+                    ]);
+                } else {
+                    call_user_func_array([$queryBuilder, $method], [
+                        $databaseField, $clauseOperator, $value
+                    ]);
+                }
+            }
+        }
+    }
 
     /**
      * @param Builder $queryBuilder
