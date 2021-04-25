@@ -120,7 +120,6 @@ trait EloquentBuilderTrait
 
         return $joins;
 
-
         // $joins = [];
         // foreach ($filterGroups as $group) {
         //     $or = $group['or'];
