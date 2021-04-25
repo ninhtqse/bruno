@@ -164,18 +164,20 @@ Thuộc tính | Kiểu dữ liệu | Mô tả
 or | boolean | truyền vào toán tử OR hoặc AND, or = true sẽ là OR, or = false sẽ là AND
 filters | array | Mảng bộ lọc (xem cú pháp bên dưới)
 
-```json
-{
+```array
+[
     [
-        "filters":[
-            {
-                "key": "price",
-                "operator": "bt",
-                "value": "[101,200]",
-            }
+        "filters" => [
+            [
+                "key" => "acreage"
+                "operator" => "bt"
+                "value" => "[101,200]"
+                "not" => false
+            ]
         ]
+        "or" => false
     ]
-}
+]
 ```
 ```string
 filter_groups[0][filters][1][key]=acreage&filter_groups[0][filters][1][operator]=bt&filter_groups[0][filters][1][value]=[101,200]
