@@ -250,7 +250,7 @@ trait EloquentBuilderTrait
                 // In operations do not have an operator
                 if (in_array($operator, ['in', 'bt'])) {
                     call_user_func_array([$queryBuilder, $method], [
-                        $databaseField, \json_decode($value,true)
+                        $databaseField, $value
                     ]);
                 } else {
                     call_user_func_array([$queryBuilder, $method], [
