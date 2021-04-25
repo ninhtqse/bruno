@@ -101,14 +101,14 @@ trait EloquentBuilderTrait
                     foreach($filters as $filter){
                         $exp = \explode('.',$filter['key']);
                         $filter['key'] = $exp[1];
-                        $this->applyFilter($query, $filter, $or, $joins);
+                        // $this->applyFilter($query, $filter, $or, $joins);
                     }
                     // $query->where($tmp[1], '=', $first['value']);
                 });
             } else {
                 $queryBuilder->where(function (Builder $query) use ($filters, $or, &$joins) {
                     foreach ($filters as $filter) {
-                        $this->applyFilter($query, $filter, $or, $joins);
+                        // $this->applyFilter($query, $filter, $or, $joins);
                     }
                 });
             }
@@ -250,7 +250,7 @@ trait EloquentBuilderTrait
                 // In operations do not have an operator
                 if (in_array($operator, ['in', 'bt'])) {
                     call_user_func_array([$queryBuilder, $method], [
-                        $databaseField, $value
+                        $databaseField, \json_decode($value,true)
                     ]);
                 } else {
                     call_user_func_array([$queryBuilder, $method], [
