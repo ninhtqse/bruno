@@ -143,7 +143,9 @@ abstract class LaravelController extends Controller
             'filter_groups' => [],
             'options' => [],
             'skip' => null,
-            'take' => null
+            'take' => null,
+			'not_fields' => null,
+			'filter_or' => []
         ], $this->defaults);
 
         $includes = $this->parseIncludes($request->get('includes', $this->defaults['includes']));
@@ -155,21 +157,26 @@ abstract class LaravelController extends Controller
         $options = $request->get('options', $this->defaults['options']);
         $skip = $request->get('skip', $this->defaults['skip']);
         $take = $request->get('take', $this->defaults['take']);
+		$not_fields = $request->get('not_fields', $this->defaults['not_fields']);
+		$filter_or  = $request->get('filter_or', $this->defaults['filter_or']);
+		
         if ($page !== null && $limit === null) {
             throw new InvalidArgumentException('Cannot use page option without limit option');
         }
 
         return [
-            'includes' => $includes['includes'],
-            'modes' => $includes['modes'],
-            'sort' => $sort,
-            'fields' => $fields,
-            'limit' => $limit,
-            'page' => $page,
+            'includes' 		=> $includes['includes'],
+            'modes' 		=> $includes['modes'],
+            'sort' 			=> $sort,
+            'fields' 		=> $fields,
+            'limit' 		=> $limit,
+            'page' 			=> $page,
             'filter_groups' => $filter_groups,
-            'options' => $options,
-            'skip'      => $skip,
-            'take'      => $take
+            'options' 	 	=> $options,
+            'skip'       	=> $skip,
+            'take'       	=> $take,
+			'not_fields' 	=> $not_fields,
+			'filter_or'  	=> $filter_or
         ];
     }
 }

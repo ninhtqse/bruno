@@ -55,7 +55,8 @@ Filter_groups | array | Mảng các nhóm bộ lọc. Xem bên dưới để bi�
 Fields | array | Nhận các trường theo các tham số được truyền vào.
 Skip | integer | Vị trí bắt đầu nằm trong cơ sở dữ liệu
 Take | integer | Số lượng bản ghi muốn lấy
-
+Not_fields | boolean | Trừ các trường còn lại lấy hết
+Filter_or | boolean | ...
 ### Thực hiện
 
 ```php

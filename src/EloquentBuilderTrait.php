@@ -34,11 +34,17 @@ trait EloquentBuilderTrait
         }
 
         if (isset($filter_groups)) {
-            $filterJoins = $this->applyFilterGroups($queryBuilder, $filter_groups);
+            $filterJoins = $this->applyFilterGroups($queryBuilder, $filter_groups,[],$filter_or);
         }
 
         if ($fields) {
-            $queryBuilder->select($fields);
+            if($not_fields){
+                $all_fields = \Schema::getColumnListing($queryBuilder->getModel()->getTable());
+                $fields_new = array_diff($all_fields,$fields);
+                $queryBuilder->select($fields_new);
+            }else{
+                $queryBuilder->select($fields);
+            }
         }
 
         if (isset($sort)) {
@@ -85,19 +91,22 @@ trait EloquentBuilderTrait
      * @param array $previouslyJoined
      * @return array
      */
-    protected function applyFilterGroups(Builder $queryBuilder, array $filterGroups = [], array $previouslyJoined = [])
+     protected function applyFilterGroups(Builder $queryBuilder, array $filterGroups = [], array $previouslyJoined = [],array $filterOr = [])
     {
         // filter các quan hệ (sửa tạm)
         $joins = [];
-        foreach ($filterGroups as $group) {
-            
+        foreach ($filterGroups as $key => $group) {
             $or = $group['or'];
             $filters = $group['filters'];
             $first = current($filters);
             if(strrpos(@$first['key'], '.') !== false) {
                 $tmp = explode('.', $first['key']);
                 $first['key'] = $tmp[1];
-                $queryBuilder->whereHas($tmp[0], function ($query) use ($first, $or, &$joins,$filters) {
+                $whereHas = 'whereHas';
+                if(@$filterOr[$key - 1]){
+                    $whereHas = 'orWhereHas';
+                }
+                $queryBuilder->$whereHas($tmp[0], function ($query) use ($first, $or, &$joins,$filters) {
                     foreach($filters as $filter){
                         $exp = \explode('.',$filter['key']);
                         $filter['key'] = $exp[1];
@@ -106,7 +115,11 @@ trait EloquentBuilderTrait
                     // $query->where($tmp[1], '=', $first['value']);
                 });
             } else {
-                $queryBuilder->where(function (Builder $query) use ($filters, $or, &$joins) {
+                $where = 'where';
+                if(@$filterOr[$key - 1]){
+                    $where = 'orWhere';
+                }
+                $queryBuilder->$where(function (Builder $query) use ($filters, $or, &$joins) {
                     foreach ($filters as $filter) {
                         $this->applyFilter($query, $filter, $or, $joins);
                     }
