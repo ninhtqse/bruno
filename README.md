@@ -8,8 +8,7 @@
 
 ## Giới thiệu
 
-Một lớp bộ điều khiển cơ sở Laravel và một đặc điểm sẽ cho phép thêm tính năng lọc, sắp xếp, tải nhanh và phân trang cho
-URL tài nguyên.
+Sử dụng với chức năng phân trang, sort, query tại client,...
 
 **Dành riêng cho Bruno**
 
@@ -28,8 +27,6 @@ Vì những ý tưởng của mình và việc từ chối từ bỏ chúng, ôn
 ```bash
 composer require ninhtqse/bruno
 ```
-
-
 
 ### Các tham số truy vấn có sẵn
 
