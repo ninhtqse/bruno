@@ -73,7 +73,7 @@ Có thể truyền nhiều trường để sort
 
 **Tham số**
 
-Property | Value type | Description
+Tên trường | Giá trị | Mô tả
 -------- | ---------- | -----------
 key | string | Tên trường
 direction | ASC or DESC | Kiểu sắp xếp
@@ -95,6 +95,28 @@ direction | ASC or DESC | Kiểu sắp xếp
 VD:
 `localhost/users?sort[0][key]=title&sort[0][direction]=asc&sort[1][key]=title&sort[1][direction]=asc`
 
+
+=======================**Limit**=======================
+
+Dùng để lấy ra số bản ghi nhất định 
+
+VD:
+`localhost/users?limit=10`
+
+=======================**Page**=======================
+
+Dùng để phân trang . Page bắt buộc phải đi với limit
+
+VD: 
+Tổng có 50 bản ghi nhưng mỗi trang chỉ lấy 10 bản ghi => có 5 trang. Page là số từ 1->5
+`localhost/users?limit=10&page=2`
+
+
+Dùng để sắp xếp dữ liệu theo các trường
+
+Có 2 giá trị cần truyền vào sort 
+
+Có thể truyền nhiều trường để sort
 
 ## Tài liệu cú pháp
 
