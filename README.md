@@ -63,6 +63,39 @@ VD:
 `localhost/users?includes[]=blogs&includes[]=options`
 
 
+=======================**Sort**=======================
+
+Dùng để sắp xếp dữ liệu theo các trường
+
+Có 2 giá trị cần truyền vào sort 
+
+Có thể truyền nhiều trường để sort
+
+**Tham số**
+
+Property | Value type | Description
+-------- | ---------- | -----------
+key | string | Tên trường
+direction | ASC or DESC | Kiểu sắp xếp
+
+**Ví dụ**
+
+```json
+[
+    {
+        "key": "title",
+        "direction": "ASC"
+    }, {
+        "key": "year",
+        "direction": "DESC"
+    }
+]
+```
+
+VD:
+`localhost/users?sort[0][key]=title&sort[0][direction]=asc&sort[1][key]=title&sort[1][direction]=asc`
+
+
 ## Tài liệu cú pháp
 
 ### Eager loading
