@@ -164,7 +164,9 @@ null (string) | Thuộc tính sẽ được kiểm tra giá trị NULL
 ```
 VD: 
 `localhost/users?filter_groups[0][filters][1][key]=hierarchy&filter_groups[0][filters][1][operator]=eq&filter_groups[0][filters][1][value]=13`
+
 SQL:
+
 `select * from `rooms` where (`rooms`.`hierarchy` = 13)`
 
 
