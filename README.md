@@ -51,12 +51,13 @@ Filter_or | boolean | ...
 =======================**Includes**=======================
 
 Dùng để lấy ra dữ liệu của các bảng liên kết
+
 Ví dụ bảng users liên kết 1 nhiều với bảng blogs
 
 VD:
 `localhost/users?includes[]=blogs`
 
-Có thể includes nhiều bảng khác nhau, nếu là 1 nhiều sẽ có s đằng sau tên bảng :
+Có thể includes nhiều bảng khác nhau, nếu là (1 - nhiều) sẽ có s đằng sau tên bảng :
 
 VD: 
 `localhost/users?includes[]=blogs&includes[]=options`
