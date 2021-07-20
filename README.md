@@ -23,25 +23,13 @@ Vì những ý tưởng của mình và việc từ chối từ bỏ chúng, ôn
 * Lọc tài nguyên nâng cao bằng cách sử dụng nhóm bộ lọc
 * Sử dụng [Ninhtqse\Architect](https://github.com/ninhtqse/architect) để tải bên ngoài, tải id hoặc tải nhúng các tài nguyên liên quan
 
-## Hướng dẫn
-
-Để bắt đầu với Bruno, tôi thực sự giới thiệu bài viết về
-[Kiểm soát tài nguyên trong API Laravel](http://esbenp.github.io/2016/04/15/modern-rest-api-laravel-part-2/)
-
 ## Cài đặt
 
 ```bash
 composer require ninhtqse/bruno
 ```
 
-## Sử dụng
 
-Các ví dụ sẽ là một điểm cuối tài nguyên giả định `/books` sẽ trả về một collection `Book`,
-thuộc về mỗi `Author`.
-
-```
-Book n ----- 1 Author
-```
 
 ### Các tham số truy vấn có sẵn
 
@@ -57,40 +45,21 @@ Skip | integer | Vị trí bắt đầu nằm trong cơ sở dữ liệu
 Take | integer | Số lượng bản ghi muốn lấy
 Not_fields | boolean | Trừ các trường còn lại lấy hết
 Filter_or | boolean | ...
-### Thực hiện
 
-```php
-<?php
+## Sử dụng
 
-namespace App\Http\Controllers;
+**Includes**
+Dùng để lấy ra dữ liệu của các bảng liên kết
+Ví dụ bảng users liên kết 1 nhiều với bảng blogs
 
-use Ninhtqse\Api\Controller\EloquentBuilderTrait;
-use Ninhtqse\Api\Controller\LaravelController;
-use App\Models\Book;
+VD:
+`localhost/users?includes[]=blogs`
 
-class BookController extends LaravelController
-{
-    use EloquentBuilderTrait;
+Có thể includes nhiều bảng khác nhau, nếu là 1 nhiều sẽ có s đằng sau tên bảng :
 
-    public function getBooks()
-    {
-        // Parse the resource options given by GET parameters
-        $resourceOptions = $this->parseResourceOptions();
+VD: 
+`localhost/users?includes[]=blogs&includes[]=options`
 
-        // Start a new query for books using Eloquent query builder
-        // (This would normally live somewhere else, e.g. in a Repository)
-        $query = Book::query();
-        $this->applyResourceOptions($query, $resourceOptions);
-        $books = $query->get();
-
-        // Parse the data using Optimus\Architect
-        $parsedData = $this->parseData($books, $resourceOptions, 'books');
-
-        // Create JSON response of parsed data
-        return $this->response($parsedData);
-    }
-}
-```
 
 ## Tài liệu cú pháp
 
