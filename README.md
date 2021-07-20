@@ -181,8 +181,17 @@ SQL:
 select * from `rooms` where (`rooms`.`hierarchy` = 13) and (`rooms`.`floor_plan` = 1LDK)
 ```
 
-+ Trường filter_groups[0] là dấu ngoặc đầu tiên của câu lệnh SQL bên trên | trường filter_groups[1] là dấu ngoặc thứ 2
++ Trường filter_groups[0] là dấu ngoặc đầu tiên của câu lệnh SQL bên trên | trường filter_groups[1] là dấu ngoặc thứ 2 sau and
+
 + Các mảng nhỏ trong trường filters sẽ nằm trong ngoặc lớn 
+VD:
+```string
+localhost/users?filter_groups[0][filters][1][key]=hierarchy&filter_groups[0][filters][1][operator]=eq&filter_groups[0][filters][1][value]=13&filter_groups[0][filters][2][key]=floor_plan&filter_groups[0][filters][2][operator]=eq&filter_groups[0][filters][2][value]=1LDK
+```
+SQL:
+```string
+select * from `rooms` where (`rooms`.`hierarchy` = 13 and `rooms`.`floor_plan` = 1LDK)
+```
 + Trường not: Nếu bằng true sẽ (phủ định|ngược lại) của toán tử (operator)
 + Mạc định giữa các ngoặc lớn sẽ là điều kiện sẽ là and
 + Với các trường nhỏ bên trong filters. Sử dụng or để đổi lại toán tử => Mạc định là and
