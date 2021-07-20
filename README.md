@@ -55,12 +55,16 @@ Dùng để lấy ra dữ liệu của các bảng liên kết
 Ví dụ bảng users liên kết 1 nhiều với bảng blogs
 
 VD:
-`localhost/users?includes[]=blogs`
+```string
+localhost/users?includes[]=blogs
+```
 
 Có thể includes nhiều bảng khác nhau, nếu là (1 - nhiều) sẽ có s đằng sau tên bảng :
 
 VD: 
-`localhost/users?includes[]=blogs&includes[]=options`
+```string
+localhost/users?includes[]=blogs&includes[]=options
+```
 
 
 =======================**Sort**=======================
@@ -169,13 +173,36 @@ null (string) | Thuộc tính sẽ được kiểm tra giá trị NULL
 ```
 VD: 
 ```string
-localhost/users?filter_groups[0][filters][1][key]=hierarchy&filter_groups[0][filters][1][operator]=eq&filter_groups[0][filters][1][value]=13
+localhost/users?filter_groups[0][filters][1][key]=hierarchy&filter_groups[0][filters][1][operator]=eq&filter_groups[0][filters][1][value]=13&filter_groups[1][filters][1][key]=floor_plan&filter_groups[1][filters][1][operator]=eq&filter_groups[1][filters][1][value]=1LDK
 ```
 SQL:
 
 ```string
-select * from `rooms` where (`rooms`.`hierarchy` = 13)
+select * from `rooms` where (`rooms`.`hierarchy` = 13) and (`rooms`.`floor_plan` = 1LDK)
 ```
+
++ Trường filter_groups[0] là dấu ngoặc đầu tiên của câu lệnh SQL bên trên | trường filter_groups[1] là dấu ngoặc thứ 2
++ Các mảng nhỏ trong trường filters sẽ nằm trong ngoặc lớn 
++ Trường not: Nếu bằng true sẽ (phủ định|ngược lại) của toán tử (operator)
++ Mạc định giữa các ngoặc lớn sẽ là điều kiện sẽ là and
++ Với các trường nhỏ bên trong filters. Sử dụng or để đổi lại toán tử => Mạc định là and
+
+=======================**Filter_or**=======================
+
+Sử dụng bắt buộc phải có filter_groups
++ Như đã nói bên trên "Mạc định giữa các ngoặc lớn sẽ là điều kiện sẽ là and"
++ Nếu muốn là or ta truyền : 
+
+VD:
+```string
+localhost/users?filter_groups[0][filters][1][key]=hierarchy&filter_groups[0][filters][1][operator]=eq&filter_groups[0][filters][1][value]=13&filter_groups[1][filters][1][key]=floor_plan&filter_groups[1][filters][1][operator]=eq&filter_groups[1][filters][1][value]=1LDK&filter_or[0]=true
+```
+
+SQL:
+```string
+select * from `rooms` where (`rooms`.`hierarchy` = 13) or (`rooms`.`floor_plan` = 1LDK)
+```
+
 
 
 Dùng để sắp xếp dữ liệu theo các trường
