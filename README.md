@@ -47,17 +47,14 @@ Filter_or | boolean | ...
 
 =======================**Includes**=======================
 
-Dùng để lấy ra dữ liệu của các bảng liên kết
-
-Ví dụ bảng users liên kết 1 nhiều với bảng blogs
++ Dùng để lấy ra dữ liệu của các bảng liên kết
++ Ví dụ bảng users liên kết 1 nhiều với bảng blogs
 
 VD:
 ```string
 localhost/users?includes[]=blogs
 ```
-
-Có thể includes nhiều bảng khác nhau, nếu là (1 - nhiều) sẽ có s đằng sau tên bảng :
-
++ Có thể includes nhiều bảng khác nhau, nếu là (1 - nhiều) sẽ có s đằng sau tên bảng :
 VD: 
 ```string
 localhost/users?includes[]=blogs&includes[]=options
@@ -66,11 +63,9 @@ localhost/users?includes[]=blogs&includes[]=options
 
 =======================**Sort**=======================
 
-Dùng để sắp xếp dữ liệu theo các trường
-
-Có 2 giá trị cần truyền vào sort 
-
-Có thể truyền nhiều trường để sort
++ Dùng để sắp xếp dữ liệu theo các trường
++ Có 2 giá trị cần truyền vào sort 
++ Có thể truyền nhiều trường để sort
 
 **Tham số**
 
@@ -101,7 +96,7 @@ localhost/users?sort[0][key]=title&sort[0][direction]=asc&sort[1][key]=title&sor
 
 =======================**Limit**=======================
 
-Dùng để lấy ra số bản ghi nhất định 
++ Dùng để lấy ra số bản ghi nhất định 
 
 VD:
 ```string
@@ -110,7 +105,7 @@ localhost/users?limit=10
 
 =======================**Page**=======================
 
-Dùng để phân trang . Page bắt buộc phải đi với limit
++ Dùng để phân trang . Page bắt buộc phải đi với limit
 
 VD: 
 Tổng có 50 bản ghi nhưng mỗi trang chỉ lấy 10 bản ghi => có 5 trang. Page là số từ 1->5
@@ -119,8 +114,8 @@ localhost/users?limit=10&page=2
 ```
 =======================**Filter_groups**=======================
 
-Dùng để query phía client
-Filter_groups có 4 tham số
++ Dùng để query phía client
++ Filter_groups có 4 tham số
 
 **Tham số**
 
