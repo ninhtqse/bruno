@@ -48,9 +48,7 @@ Filter_or | boolean | ...
 
 ## Sử dụng
 
-==========================================================
 =======================**Includes**=======================
-==========================================================
 
 Dùng để lấy ra dữ liệu của các bảng liên kết
 
@@ -64,9 +62,8 @@ Có thể includes nhiều bảng khác nhau, nếu là (1 - nhiều) se�
 VD: 
 `localhost/users?includes[]=blogs&includes[]=options`
 
-======================================================
+
 =======================**Sort**=======================
-======================================================
 
 Dùng để sắp xếp dữ liệu theo các trường
 
@@ -99,24 +96,77 @@ VD:
 `localhost/users?sort[0][key]=title&sort[0][direction]=asc&sort[1][key]=title&sort[1][direction]=asc`
 
 
-=======================================================
 =======================**Limit**=======================
-=======================================================
 
 Dùng để lấy ra số bản ghi nhất định 
 
 VD:
 `localhost/users?limit=10`
 
-======================================================
 =======================**Page**=======================
-======================================================
 
 Dùng để phân trang . Page bắt buộc phải đi với limit
 
 VD: 
 Tổng có 50 bản ghi nhưng mỗi trang chỉ lấy 10 bản ghi => có 5 trang. Page là số từ 1->5
 `localhost/users?limit=10&page=2`
+
+=======================**Filter_groups**=======================
+
+Dùng để query phía client
+Filter_groups có 4 tham số
+
+**Tham số**
+
+Trường | Kiểu dữ liệu | Mô tả
+-------- | ---------- | -----------
+key | string | Trường trong bảng
+value | mixed | Giá trị
+operator | string | Toán tử
+not | boolean | Phủ nhận bộ lọc
+
+**Toán tử**
+
+Kiểu | Mô tả | Ví dụ
+---- | ----------- | -------
+ct | Chuỗi chứa | `ior` matches `Giordano Bruno` and `Giovanni`
+sw | Bắt đầu với | `Gior` matches `Giordano Bruno` but not `Giovanni`
+ew | Kết thúc với | `uno` matches `Giordano Bruno` but not `Giovanni`
+eq | Bằng | `Giordano Bruno` matches `Giordano Bruno` but not `Bruno`
+gt | Lớn hơn | `1548` matches `1600` but not `1400`
+gte| Lớn hơn hoặc bằng | `1548` matches `1548` and above (ony for Laravel 5.4 and above)
+lte | Nhỏ hơn hoặc bằng | `1600` matches `1600` and below (ony for Laravel 5.4 and above)
+lt | Ít hơn | `1600` matches `1548` but not `1700`
+in | Có tồn tại trong mảng | `['Giordano', 'Bruno']` matches `Giordano` and `Bruno` but not `Giovanni`
+bt | Giữa | `[1, 10]` matches `5` and `7` but not `11`
+
+**Giá trị đặc biệt**
+
+Giá trị | Mô tả
+----- | -----------
+null (string) | Thuộc tính sẽ được kiểm tra giá trị NULL
+(empty string) | Thuộc tính sẽ được kiểm tra giá trị NULL
+
+```array
+[
+    [
+        "filters" => [
+            [
+                "key" => "acreage"
+                "operator" => "bt"
+                "value" => "[101,200]"
+                "not" => false
+            ]
+        ]
+        "or" => false
+    ]
+]
+```
+VD: 
+`localhost/users?filter_groups[0][filters][1][key]=hierarchy&filter_groups[0][filters][1][operator]=eq&filter_groups[0][filters][1][value]=13`
+SQL:
+`select * from `rooms` where (`rooms`.`hierarchy` = 13)`
+
 
 
 Dùng để sắp xếp dữ liệu theo các trường
