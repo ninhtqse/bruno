@@ -182,7 +182,7 @@ select * from `rooms` where (`rooms`.`hierarchy` = 13) and (`rooms`.`floor_plan`
 ```
 
 + Trường filter_groups[0] là dấu ngoặc đầu tiên của câu lệnh SQL bên trên | trường filter_groups[1] là dấu ngoặc thứ 2 sau and
-
++ Mạc định giữa các ngoặc lớn sẽ là điều kiện sẽ là and
 + Các mảng nhỏ trong trường filters sẽ nằm trong ngoặc lớn 
 VD:
 ```string
@@ -193,7 +193,6 @@ SQL:
 select * from `rooms` where (`rooms`.`hierarchy` = 13 and `rooms`.`floor_plan` = 1LDK)
 ```
 + Trường not: Nếu bằng true sẽ (phủ định|ngược lại) của toán tử (operator)
-+ Mạc định giữa các ngoặc lớn sẽ là điều kiện sẽ là and
 + Với các trường nhỏ bên trong filters. Sử dụng or để đổi lại toán tử => Mạc định là and
 
 =======================**Filter_or**=======================
@@ -213,139 +212,43 @@ select * from `rooms` where (`rooms`.`hierarchy` = 13) or (`rooms`.`floor_plan` 
 ```
 
 
+=======================**Fields**=======================
 
-Dùng để sắp xếp dữ liệu theo các trường
+Sử dụng để lấy ra các trường cần thiết
++ Ví dụ có 100 trường nhưng chỉ lấy 1 trường
 
-Có 2 giá trị cần truyền vào sort 
-
-Có thể truyền nhiều trường để sort
-
-## Tài liệu cú pháp
-
-### Eager loading
-
-**Simple eager load**
-
-`/books?includes[]=author`
-
-Sử dụng function relationship author trong model `Book` để load ra thêm mảng `Author`.
-
-**IDs mode**
-
-`/books?includes[]=author:ids`
-
-Lấy ra tất cả id của `Author`.
-
-**Sideload mode**
-
-`/books?includes[]=author:sideload`
-
-Tách mảng `Author` ra thêm 1 mảng riêng nữa. trong `Book` vẫn sẽ có ids của `Author`
-
-[Xem về eager loading trong Ninhtqse\Architect's README](https://github.com/ninhtqse/architect)
-
-### Phân trang
-
-Hai tham số có sẵn: `limit` và `page`. `limit` sẽ xác định số lượng
-bản ghi trên mỗi trang và `page` sẽ xác định trang hiện tại.
-
-`/books?limit=10&page=3`
-
-Sẽ trả lại bản ghi của book từ 30-40.
-
-### Sắp xếp
-
-Nên được định nghĩa là một mảng các quy tắc sắp xếp. Chúng sẽ được áp dụng trong
-thứ tự mà chúng được xác định.
-
-**Quy tắc sắp xếp**
-
-Tính chất | Kiểu dữ liệu | Mô tả
--------- | ---------- | -----------
-key | string | Thuộc tính của model sẽ sắp xếp theo
-thuộc tính | ASC hoặc DESC | Sắp xếp thuộc tính nào
-
-**Ví dụ**
-
-```json
-[
-    {
-        "key": "title",
-        "direction": "ASC"
-    }, {
-        "key": "year",
-        "direction": "DESC"
-    }
-]
-```
-
-Sẽ dẫn đến việc các sách được sắp xếp theo tên sách theo thứ tự tăng dần và sau đó là năm
-thứ tự giảm dần.
-
-### Lọc
-
-Nên được định nghĩa là một mảng các nhóm bộ lọc.
-
-**Filter groups**
-
-Thuộc tính | Kiểu dữ liệu | Mô tả
--------- | ---------- | -----------
-or | boolean | truyền vào toán tử OR hoặc AND, or = true sẽ là OR, or = false sẽ là AND
-filters | array | Mảng bộ lọc (xem cú pháp bên dưới)
-
-```array
-[
-    [
-        "filters" => [
-            [
-                "key" => "acreage"
-                "operator" => "bt"
-                "value" => "[101,200]"
-                "not" => false
-            ]
-        ]
-        "or" => false
-    ]
-]
-```
 ```string
-filter_groups[0][filters][1][key]=acreage&filter_groups[0][filters][1][operator]=bt&filter_groups[0][filters][1][value]=[101,200]
+localhost/users?fields[]=name&fields[]=test
 ```
 
+=======================**Skip**=======================
 
-**Filters**
+Sử dụng để lấy ra vị trí trong sql | bắt buộc phải đi với take
++ Ví dụ lấy ra 10 bản ghi dùng skip để lấy từ bản ghi số 5 trở đi
 
-Thuộc tính | Kiểu dữ liệu | Mô tả
--------- | ---------- | -----------
-key | string | Thuộc tính của model để lọc (cũng có thể là bộ lọc tùy chỉnh)
-value | mixed | Giá trị cần tìm kiếm
-operator | string | Toán tử bộ lọc để sử dụng (xem các loại khác nhau bên dưới)
-not | boolean | Phủ nhận bộ lọc
+```string
+localhost/users?skip=5&take=10
+```
 
-**Operators**
+=======================**Take**=======================
 
-Kiểu | Mô tả | Ví dụ
----- | ----------- | -------
-ct | Chuỗi chứa | `ior` matches `Giordano Bruno` and `Giovanni`
-sw | Bắt đầu với | `Gior` matches `Giordano Bruno` but not `Giovanni`
-ew | Kết thúc với | `uno` matches `Giordano Bruno` but not `Giovanni`
-eq | Bằng | `Giordano Bruno` matches `Giordano Bruno` but not `Bruno`
-gt | Lớn hơn | `1548` matches `1600` but not `1400`
-gte| Lớn hơn hoặc bằng | `1548` matches `1548` and above (ony for Laravel 5.4 and above)
-lte | Nhỏ hơn hoặc bằng | `1600` matches `1600` and below (ony for Laravel 5.4 and above)
-lt | Ít hơn | `1600` matches `1548` but not `1700`
-in | Có tồn tại trong mảng | `['Giordano', 'Bruno']` matches `Giordano` and `Bruno` but not `Giovanni`
-bt | Giữa | `[1, 10]` matches `5` and `7` but not `11`
+Sử dụng để lấy ra số bản ghi mong muốn
++ Ví dụ lấy ra 10
 
-**Giá trị đặc biệt**
+```string
+localhost/users?take=10
+```
 
-Giá trị | Mô tả
------ | -----------
-null (string) | Thuộc tính sẽ được kiểm tra giá trị NULL
-(empty string) | Thuộc tính sẽ được kiểm tra giá trị NULL
+=======================**Not_fields**=======================
 
-#### Bộ lọc tùy chỉnh (Xem bên dưới tài liệu tiếng anh)
-### Optional Shorthand Filtering Syntax (Xem bên dưới tài liệu tiếng anh)
+Sử dụng để loại bỏ các bản ghi không cần thiết
++ VD bảng có 100 trường lấy 99 trường
++ Nếu dùng fields phải liệt kê quá nhiều
+
+```string
+localhost/users?not_fields[]=name
+```
+
 -----------------------------------------------------------------------------------------------------------------------------------------
 # Bruno ENGLISH
 
