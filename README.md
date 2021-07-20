@@ -93,7 +93,9 @@ direction | ASC or DESC | Kiểu sắp xếp
 ```
 
 VD:
-`localhost/users?sort[0][key]=title&sort[0][direction]=asc&sort[1][key]=title&sort[1][direction]=asc`
+```string
+localhost/users?sort[0][key]=title&sort[0][direction]=asc&sort[1][key]=title&sort[1][direction]=asc
+```
 
 
 =======================**Limit**=======================
@@ -101,7 +103,9 @@ VD:
 Dùng để lấy ra số bản ghi nhất định 
 
 VD:
-`localhost/users?limit=10`
+```string
+localhost/users?limit=10
+```
 
 =======================**Page**=======================
 
@@ -109,8 +113,9 @@ Dùng để phân trang . Page bắt buộc phải đi với limit
 
 VD: 
 Tổng có 50 bản ghi nhưng mỗi trang chỉ lấy 10 bản ghi => có 5 trang. Page là số từ 1->5
-`localhost/users?limit=10&page=2`
-
+```string
+localhost/users?limit=10&page=2
+```
 =======================**Filter_groups**=======================
 
 Dùng để query phía client
@@ -163,9 +168,9 @@ null (string) | Thuộc tính sẽ được kiểm tra giá trị NULL
 ]
 ```
 VD: 
-
-`localhost/users?filter_groups[0][filters][1][key]=hierarchy&filter_groups[0][filters][1][operator]=eq&filter_groups[0][filters][1][value]=13`
-
+```string
+localhost/users?filter_groups[0][filters][1][key]=hierarchy&filter_groups[0][filters][1][operator]=eq&filter_groups[0][filters][1][value]=13
+```
 SQL:
 
 ```string
