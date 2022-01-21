@@ -241,6 +241,30 @@ trait EloquentBuilderTrait
                     }
                     $clauseOperator = false;
                     break;
+                case 'eqd':
+                    if ($or === true) {
+                        $method = $not === true ? 'orWhereNotDate' : 'orWhereDate';
+                    } else {
+                        $method = $not === true ? 'whereDate' : 'whereDate';
+                    }
+                    $clauseOperator = false;
+                    break;
+                case 'eqy':
+                    if ($or === true) {
+                        $method = $not === true ? 'orWhereNotYear' : 'orWhereYear';
+                    } else {
+                        $method = $not === true ? 'whereYear' : 'whereYear';
+                    }
+                    $clauseOperator = false;
+                    break;
+                case 'eqm':
+                    if ($or === true) {
+                        $method = $not === true ? 'orWhereNotMonth' : 'orWhereMonth';
+                    } else {
+                        $method = $not === true ? 'whereMonth' : 'whereMonth';
+                    }
+                    $clauseOperator = false;
+                    break;
             }
 
             // If we do not assign database field, the customer filter method
