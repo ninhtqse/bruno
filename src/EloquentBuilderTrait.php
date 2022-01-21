@@ -247,7 +247,7 @@ trait EloquentBuilderTrait
                     } else {
                         $method = $not === true ? 'whereDate' : 'whereDate';
                     }
-                    $clauseOperator = false;
+                    $clauseOperator = $not ? '!=' : '=';
                     break;
                 case 'eqy':
                     if ($or === true) {
@@ -255,7 +255,7 @@ trait EloquentBuilderTrait
                     } else {
                         $method = $not === true ? 'whereYear' : 'whereYear';
                     }
-                    $clauseOperator = false;
+                    $clauseOperator = $not ? '!=' : '=';
                     break;
                 case 'eqm':
                     if ($or === true) {
@@ -263,7 +263,7 @@ trait EloquentBuilderTrait
                     } else {
                         $method = $not === true ? 'whereMonth' : 'whereMonth';
                     }
-                    $clauseOperator = false;
+                    $clauseOperator = $not ? '!=' : '=';
                     break;
             }
 
