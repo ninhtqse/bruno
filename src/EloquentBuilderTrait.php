@@ -37,14 +37,12 @@ trait EloquentBuilderTrait
             $filterJoins = $this->applyFilterGroups($queryBuilder, $filter_groups,[],$filter_or);
         }
 
-        if ($fields) {
-            if($not_fields){
-                $all_fields = \Schema::getColumnListing($queryBuilder->getModel()->getTable());
-                $fields_new = array_diff($all_fields,$fields);
-                $queryBuilder->select($fields_new);
-            }else{
-                $queryBuilder->select($fields);
-            }
+        if($not_fields){
+            $all_fields = \Schema::getColumnListing($queryBuilder->getModel()->getTable());
+            $fields_new = array_diff($all_fields,$not_fields);
+            $queryBuilder->select($fields_new);
+        }else if($fields){
+            $queryBuilder->select($fields);
         }
 
         if (isset($sort)) {
