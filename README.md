@@ -140,7 +140,7 @@ lte | Nhỏ hơn hoặc bằng | `1600` matches `1600` and below (ony for Larave
 lt | Ít hơn | `1600` matches `1548` but not `1700`
 in | Có tồn tại trong mảng | `['Giordano', 'Bruno']` matches `Giordano` and `Bruno` but not `Giovanni`
 bt | Giữa | `[1, 10]` matches `5` and `7` but not `11`
-eqd | So sánh ngày tháng năm | 2022-01-21
+eqd | So sánh ngày tháng năm | 2022-01-21 - Dùng để filter các trường là datetime
 eqy | So sánh năm | 2022
 eqm | So sánh tháng | 01
 
