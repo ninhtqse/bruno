@@ -20,7 +20,7 @@ Vì những ý tưởng của mình và việc từ chối từ bỏ chúng, ôn
 
 * Phân tích cú pháp các thông số GET để tải động các tài nguyên liên quan, sắp xếp và phân trang
 * Lọc tài nguyên nâng cao bằng cách sử dụng nhóm bộ lọc
-* Sử dụng [Ninhtqse\Architect](https://github.com/ninhtqse/architect) để tải bên ngoài, tải id hoặc tải nhúng các tài nguyên liên quan
+* Sử dụng [ninhtqse\architect](https://github.com/ninhtqse/architect) để tải bên ngoài, tải id hoặc tải nhúng các tài nguyên liên quan
 
 ## Cài đặt
 
