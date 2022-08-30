@@ -41,7 +41,7 @@ Fields | array | Nhận các trường theo các tham số được truyền và
 Skip | integer | Vị trí bắt đầu nằm trong cơ sở dữ liệu
 Take | integer | Số lượng bản ghi muốn lấy
 Not_fields | boolean | Trừ các trường còn lại lấy hết
-Filter_or | boolean | ...
+Filter_or | boolean | Dùng đi kèm với Filter_groups dùng để thay đổi điều kiện and/or
 
 ## Sử dụng
 
