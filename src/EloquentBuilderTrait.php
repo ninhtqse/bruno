@@ -176,6 +176,11 @@ trait EloquentBuilderTrait
         // $value, $not, $key, $operator
         extract($filter);
 
+        //convert string to boolean
+        if ($not) {
+            $not = filter_var($not, FILTER_VALIDATE_BOOLEAN);
+        }
+        
         $dbType = $queryBuilder->getConnection()->getDriverName();
 
         $table = $queryBuilder->getModel()->getTable();
