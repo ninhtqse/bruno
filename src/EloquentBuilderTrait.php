@@ -2,11 +2,11 @@
 
 namespace Ninhtqse\Bruno;
 
-use DB;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use InvalidArgumentException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 use Illuminate\Support\Str;
 
 trait EloquentBuilderTrait
@@ -53,8 +53,6 @@ trait EloquentBuilderTrait
             if (!isset($filterJoins)) {
                 $filterJoins = [];
             }
-
-            $sortingJoins = $this->applySorting($queryBuilder, $sort, $filterJoins);
         }
 
         if (isset($limit)) {
@@ -91,7 +89,6 @@ trait EloquentBuilderTrait
      */
      protected function applyFilterGroups(Builder $queryBuilder, array $filterGroups = [], array $previouslyJoined = [],array $filterOr = [])
     {
-        // filter các quan hệ (sửa tạm)
         $joins = [];
         foreach ($filterGroups as $key => $group) {
             $or = $group['or'];
@@ -110,7 +107,6 @@ trait EloquentBuilderTrait
                         $filter['key'] = $exp[1];
                         $this->applyFilter($query, $filter, $or, $joins);
                     }
-                    // $query->where($tmp[1], '=', $first['value']);
                 });
             } else {
                 $where = 'where';
@@ -130,25 +126,6 @@ trait EloquentBuilderTrait
         }
 
         return $joins;
-
-
-        // $joins = [];
-        // foreach ($filterGroups as $group) {
-        //     $or = $group['or'];
-        //     $filters = $group['filters'];
-
-        //     $queryBuilder->where(function (Builder $query) use ($filters, $or, &$joins) {
-        //         foreach ($filters as $filter) {
-        //             $this->applyFilter($query, $filter, $or, $joins);
-        //         }
-        //     });
-        // }
-
-        // foreach(array_diff($joins, $previouslyJoined) as $join) {
-        //     $this->joinRelatedModelIfExists($queryBuilder, $join);
-        // }
-
-        // return $joins;
     }
 
     /**
@@ -180,7 +157,7 @@ trait EloquentBuilderTrait
         if ($not) {
             $not = filter_var($not, FILTER_VALIDATE_BOOLEAN);
         }
-        
+
         $dbType = $queryBuilder->getConnection()->getDriverName();
 
         $table = $queryBuilder->getModel()->getTable();

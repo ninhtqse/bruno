@@ -6,10 +6,8 @@ use JsonSerializable;
 use InvalidArgumentException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Routing\Controller;
-use Illuminate\Routing\Router;
 use Illuminate\Http\JsonResponse;
 use Ninhtqse\Architect\Architect;
-use Illuminate\Http\Request;
 
 abstract class LaravelController extends Controller
 {
@@ -141,6 +139,7 @@ abstract class LaravelController extends Controller
             'page' => null,
             'mode' => 'embed',
             'filter_groups' => [],
+            'filter_custom' => [],
             'options' => [],
             'skip' => null,
             'take' => null,
@@ -154,12 +153,13 @@ abstract class LaravelController extends Controller
         $limit = $request->get('limit', $this->defaults['limit']);
         $page = $request->get('page', $this->defaults['page']);
         $filter_groups = $this->parseFilterGroups($request->get('filter_groups', $this->defaults['filter_groups']));
+        $filter_custom = $request->get('filter_custom', $this->defaults['filter_custom']);
         $options = $request->get('options', $this->defaults['options']);
         $skip = $request->get('skip', $this->defaults['skip']);
         $take = $request->get('take', $this->defaults['take']);
 		$not_fields = $request->get('not_fields', $this->defaults['not_fields']);
 		$filter_or  = $request->get('filter_or', $this->defaults['filter_or']);
-		
+
         if ($page !== null && $limit === null) {
             throw new InvalidArgumentException('Cannot use page option without limit option');
         }
@@ -172,6 +172,7 @@ abstract class LaravelController extends Controller
             'limit' 		=> $limit,
             'page' 			=> $page,
             'filter_groups' => $filter_groups,
+            'filter_custom' => $filter_custom,
             'options' 	 	=> $options,
             'skip'       	=> $skip,
             'take'       	=> $take,

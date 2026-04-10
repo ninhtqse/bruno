@@ -37,6 +37,7 @@ Sort | array | Thuộc tính sắp xếp theo, e.g. 'title'
 Limit | integer | Giới hạn tài nguyên để trả lại
 Page | integer | Để sử dụng có giới hạn
 Filter_groups | array | Mảng các nhóm bộ lọc. Xem bên dưới để biết cú pháp.
+Filter_custom | array | Sử dụng cho các case filter đặc biệt
 Fields | array | Nhận các trường theo các tham số được truyền vào.
 Skip | integer | Vị trí bắt đầu nằm trong cơ sở dữ liệu
 Take | integer | Số lượng bản ghi muốn lấy
