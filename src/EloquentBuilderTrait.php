@@ -37,11 +37,11 @@ trait EloquentBuilderTrait
             $filterJoins = $this->applyFilterGroups($queryBuilder, $filter_groups,[],$filter_or);
         }
 
-        if($not_fields){
+        if(isset($not_fields)){
             $all_fields = \Schema::getColumnListing($queryBuilder->getModel()->getTable());
             $fields_new = array_diff($all_fields,$not_fields);
             $queryBuilder->select($fields_new);
-        }else if($fields){
+        }else if(isset($fields)){
             $queryBuilder->select($fields);
         }
 
