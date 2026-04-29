@@ -53,6 +53,8 @@ trait EloquentBuilderTrait
             if (!isset($filterJoins)) {
                 $filterJoins = [];
             }
+
+            $sortingJoins = $this->applySorting($queryBuilder, $sort, $filterJoins);
         }
 
         if (isset($limit)) {
